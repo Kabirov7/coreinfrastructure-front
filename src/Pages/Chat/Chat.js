@@ -21,25 +21,27 @@ const Chat = (props) => {
         "Authorization": getToken(user)
     }
 
+    let token ={
+        "token":getToken(user)
+    }
+
     useEffect(() => {
-        // axios.get(USERS + '/friends', {headers: headers}).then((response) => {
-        //     setContacts(response.data)
-        //     setActiveContact(response.data[0].id)
-        //
-        //     sessionStorage.setItem('activeContact', JSON.stringify(response.data[0].id))
-        // }).catch(function (err) {
-        //     alert("Something while /friends");
-        // });
+
+        axios.get(USERS + '/friends', {headers: headers}).then((response) => {
+            sessionStorage.setItem('activeContact', JSON.stringify(response.data[0]))
+            setContacts(response.data)
+            setActiveContact(response.data[0])
+        }).catch(function (err) {
+            alert("Something while /friends");
+        });
 
         connect()
     }, []);
 
     useEffect(() => {
         if (contacts != null && contacts.length > 0) {
-            let active = sessionStorage.getItem('activeContact');
-            console.log(active)
-            loadMessages("/chat/" + active, setMessages, headers)
-            // sessionStorage.setItem('activeContact', JSON.stringify(response.data[0]))
+            let active = getActiveChat();
+            loadMessages("/chat/" + active['id'], setMessages, headers)
 
         }
     }, [contacts, activeContact]);
@@ -48,8 +50,8 @@ const Chat = (props) => {
         const Stomp = require("stompjs");
         var SockJS = require("sockjs-client");
         SockJS = new SockJS(WEBSOCKET);
-        stompClient = Stomp.over(SockJS, headers);
-        stompClient.connect(headers, onConnected, onError);
+        stompClient = Stomp.over(SockJS, token);
+        stompClient.connect(token, onConnected, onError);
     };
 
     const onConnected = () => {
@@ -73,7 +75,7 @@ const Chat = (props) => {
         const active = getActiveChat();
 
         if (active.id === notification.sender.id) {
-            loadMessages("/chat/" + active, setMessages, headers)
+            loadMessages("/chat/" + active['id'], setMessages, headers)
         } else {
             console.log("Received a new message from " + notification.sender.email);
         }
@@ -81,36 +83,33 @@ const Chat = (props) => {
 
     function sendMessage() {
         if (text !== "") {
-            var target = getActiveChat();
             var message = {
                 text: text,
                 sender: {id: user['id'], email: user['email']},
-                target: {id: target['id'], email: target['email']}
+                target: {id: activeContact['id'], email: activeContact['email']}
             }
 
-            console.log(message)
 
             messages.push(message)
             setMessages(messages);
-            stompClient.send(CHAT, headers, JSON.stringify({
+            stompClient.send(CHAT, {token: getToken(user)}, JSON.stringify({
                 text: text,
-                target: target['id'],
-                sender: user['id']
+                target: activeContact['id'],
             }));
         }
     }
 
 
-    const handleSetCurrentChat = (id) => {
-        sessionStorage.setItem('activeContact', id)
-        setActiveContact(id)
+    const handleSetCurrentChat = (chat) => {
+        sessionStorage.setItem('activeContact', JSON.stringify(chat))
+        setActiveContact(chat)
     }
 
     return (<div style={{marginTop:50}}>
                 <div id={"contacts"}>
                     <ul>
                         {contacts ? contacts.map((e) => {
-                            const isSelected = activeContact == e.id;
+                            const isSelected = activeContact.id == e.id;
                             return <UserItem isSelected={isSelected} setChat={handleSetCurrentChat} chat={e}/>
                         }) : <div></div>
                         }
