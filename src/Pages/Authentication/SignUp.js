@@ -15,8 +15,7 @@ async function signup(credentials) {
             email: credentials['email'],
             password: credentials['password']
         }
-        console.log("credentials")
-        console.log(credentials)
+        alert("Register successfully")
 
         return loginUser(loginCredentials);
     }).catch(function (err) {
