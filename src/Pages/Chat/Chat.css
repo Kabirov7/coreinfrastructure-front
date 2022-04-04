@@ -1,0 +1,51 @@
+* ul, * li {
+    list-style-type: none;
+}
+
+#contacts {
+    top: 60px;
+    bottom: 50px;
+    position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    left: 0;
+    width: 30%;
+
+}
+
+#messages {
+    top: 60px;
+    bottom: 50px;
+    position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    right: 0;
+    width: 70%;
+}
+
+.user_item {
+    padding: 10px;
+}
+
+.user_selected {
+    background-color: gainsboro;
+}
+
+.message_item {
+    text-align: left;
+    margin-left: 0;
+    padding: 10px;
+}
+
+.message_not_mine {
+    text-align: right;
+    background-color: gainsboro;
+
+}
+
+.message-input{
+    bottom: 0;
+    position: fixed;
+    right: 0;
+    width: 70%;
+}
