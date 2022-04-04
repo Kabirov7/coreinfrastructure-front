@@ -77,7 +77,7 @@ const Chat = (props) => {
         if (active.id === notification.sender.id) {
             loadMessages("/chat/" + active['id'], setMessages, headers)
         } else {
-            console.log("Received a new message from " + notification.sender.email);
+            alert("Received a new message from " + notification.sender.email);
         }
     };
 

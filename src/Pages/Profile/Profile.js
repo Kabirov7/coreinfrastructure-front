@@ -39,7 +39,8 @@ export const Profile = ({props}) => {
         axios.get(USERS + "/" + id + '/add_friend', {headers: headers}).then((response) => {
             friends.push(notFriends[index])
             setFriends(friends)
-            var part1 = notFriends.splice(0, index)
+            var dublicatedFriends = [...notFriends]
+            var part1 = dublicatedFriends.splice(0, index)
             var part2 = notFriends.splice(index + 1)
             setNotFriends(part1.concat(part2))
 
