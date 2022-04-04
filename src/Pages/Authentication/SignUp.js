@@ -26,9 +26,9 @@ async function signup(credentials) {
 }
 
 export default function SignUp({setUser}) {
-    const [username, setUsername] = useState("newartur");
-    const [email, setEmail] = useState("newartur@email.com");
-    const [password, setPassword] = useState("123123");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const handleSubmit = async e => {
         e.preventDefault();
